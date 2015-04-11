@@ -83,4 +83,30 @@ public class DatosBeneficio {
     public void setTarjeta(String tarjeta) {
         this.tarjeta = tarjeta;
     }
+
+    public String getColor() {
+        String color;
+        switch (this.categoria)
+        {
+            case "Gastronomía":
+                color = "F39200";
+                break;
+            case "Entretenimiento":
+                color = "951981";
+                break;
+            case "Turismo":
+                color = "387738";
+                break;
+            case "Cuidado Personal":
+                color = "49BED6";
+                break;
+            case "Moda":
+                color = "E72B71";
+                break;
+            default:
+                color = "FC2C03";
+                break;
+        }
+        return color;
+    }
 }

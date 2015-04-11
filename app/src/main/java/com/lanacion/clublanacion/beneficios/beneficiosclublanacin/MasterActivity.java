@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,68 +92,6 @@ public class MasterActivity extends ActionBarActivity
         progress.setMessage("Buscando beneficios cercanos...");
         progress.show();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void forzar(View view) throws JSONException {
-        location = new Location("");
-        location.setLatitude(-34.5332422);
-        location.setLongitude(-58.4672752);
-        cargarLista();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

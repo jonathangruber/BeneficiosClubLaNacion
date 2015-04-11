@@ -21,4 +21,8 @@
     <string name="servicio">Recibir notificaciones</string>
     <string name="Cancelar">Cancelar</string>
     <string name="Guardar">Guardar</string>
+    <declare-styleable name="customfont">
+        <attr name="android:fontFamily" />
+        <attr name="android:textStyle" />
+    </declare-styleable>
 </resources>

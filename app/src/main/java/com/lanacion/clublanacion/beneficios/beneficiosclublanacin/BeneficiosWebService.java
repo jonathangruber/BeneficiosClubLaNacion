@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,10 +84,10 @@ public class BeneficiosWebService {
 
     public static ArrayList<Beneficio> obtenerGeolocalizados(Context context, Location location, long distancia) throws JSONException {
 
-        String latitud = String.valueOf(location.getLatitude());
-        String longitud = String.valueOf(location.getLongitude());
-        latitud = latitud.substring(0, 9);
-        longitud = longitud.substring(0, 9);
+        DecimalFormat format = new DecimalFormat("##.######");
+
+        String latitud = format.format(location.getLatitude());
+        String longitud = format.format(location.getLongitude());
         String url = armarUrl("geo", latitud, longitud, distancia);
         String resultado = ejectuarGet(url);
         JSONArray arr = new JSONArray(resultado);

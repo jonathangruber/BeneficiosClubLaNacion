@@ -89,9 +89,9 @@ public class MainService extends Service implements Observer {
     private void notificar() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World from the service!");
+                        .setSmallIcon(R.mipmap.ic_logo)
+                        .setContentTitle("Beneficios Club La Nación!")
+                        .setContentText("Hay nuevos beneficios cercanos");
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MasterActivity.class);
 
