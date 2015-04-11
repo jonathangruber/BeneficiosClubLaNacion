@@ -48,7 +48,7 @@ public class Beneficio {
     }
 
     private static Date getDate(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
         try {
             return format.parse(str);
         } catch (ParseException e) {

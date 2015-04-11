@@ -1,19 +1,52 @@
 package com.lanacion.clublanacion.beneficios.beneficiosclublanacin;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 
 public class ConfigActivity extends ActionBarActivity {
+
+    EditText distancia;
+    Spinner tarjeta;
+    CheckBox servicio;
+
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+
+        distancia = (EditText)findViewById(R.id.distancia);
+        tarjeta = (Spinner)findViewById(R.id.tarjeta);
+        servicio = (CheckBox)findViewById(R.id.servicio);
+
+        settings = getSharedPreferences("UserInfo", 0);
+        distancia.setText(String.valueOf(settings.getInt("distancia", 200)));
+        tarjeta.setSelection(settings.getInt("tarjeta", 0));
+        servicio.setChecked(settings.getBoolean("servicio", true));
     }
 
+    public void cancelar(View view) {
+        finish();
+    }
+
+    public void guardar(View view) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("distancia", Integer.parseInt(distancia.getText().toString()));
+        editor.putInt("tarjeta", tarjeta.getSelectedItemPosition());
+        editor.putBoolean("servicio", servicio.isChecked());
+        editor.commit();
+
+        finish();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

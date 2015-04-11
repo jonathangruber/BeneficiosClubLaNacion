@@ -16,4 +16,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_config">Ajustes</string>
+    <string name="distancia">Rango de búsqueda (metros)</string>
+    <string name="tarjeta">Tipos de beneficios</string>
+    <string name="servicio">Recibir notificaciones</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="Guardar">Guardar</string>
 </resources>

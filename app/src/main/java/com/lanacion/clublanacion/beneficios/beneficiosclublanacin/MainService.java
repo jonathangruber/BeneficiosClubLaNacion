@@ -1,5 +1,6 @@
 package com.lanacion.clublanacion.beneficios.beneficiosclublanacin;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,12 +9,14 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -21,6 +24,8 @@ import java.util.Observer;
  * Created by Diego on 10/04/2015.
  */
 public class MainService extends Service implements Observer {
+    private boolean isInForegroundMode;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         new GpsManager(this, this);
@@ -39,7 +44,21 @@ public class MainService extends Service implements Observer {
 
     @Override
     public void update(Observable observable, Object data) {
-        notificar();
+        if (debeNotificar())
+            notificar();
+    }
+
+    private boolean debeNotificar() {
+
+        SharedPreferences settings = getSharedPreferences("UserInfo", 0);
+        if (!settings.getBoolean("servicio", true))
+            return false;
+
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> services = activityManager .getRunningTasks(Integer.MAX_VALUE);
+        if (services.get(0).topActivity.getPackageName().toString().equalsIgnoreCase(getPackageName().toString()))
+            return false;
+        return true;
     }
 
     private void notificar() {

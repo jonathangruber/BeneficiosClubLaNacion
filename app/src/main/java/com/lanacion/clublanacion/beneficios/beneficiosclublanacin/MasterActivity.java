@@ -1,8 +1,10 @@
 package com.lanacion.clublanacion.beneficios.beneficiosclublanacin;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
@@ -38,6 +40,8 @@ public class MasterActivity extends ActionBarActivity
 
     ProgressDialog progress;
 
+    Location location;
+
     boolean creating = true;
 
     /**
@@ -68,12 +72,24 @@ public class MasterActivity extends ActionBarActivity
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawer.closeDrawer(Gravity.LEFT);
 
-        // new GpsManager(this, this);
+        boolean running = false;
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (MainService.class.getName().equals(service.service.getClassName())) {
+                running = true;
+            }
+        }
+        if (!running) {
+            Intent serviceIntent = new Intent(this, MainService.class);
+            startService(serviceIntent);
+        }
 
-//        progress = new ProgressDialog(this);
-//        progress.setTitle("Cargando");
-//        progress.setMessage("Buscando beneficios cercanos...");
-//        progress.show();
+        new GpsManager(this, this);
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Cargando");
+        progress.setMessage("Buscando beneficios cercanos...");
+        progress.show();
     }
 
 
@@ -108,42 +124,11 @@ public class MasterActivity extends ActionBarActivity
 
 
 
-    public void forzar(View view) {
-        Location location = new Location("");
+    public void forzar(View view) throws JSONException {
+        location = new Location("");
         location.setLatitude(-34.5332422);
         location.setLongitude(-58.4672752);
-        ArrayList<Beneficio> beneficios = null;
-        try {
-            beneficios = BeneficiosWebService.obtenerGeolocalizados(location, 200);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        BeneficioItemAdapter adapter = new BeneficioItemAdapter(this, beneficios, location);
-        final ListView listView = (ListView) findViewById(R.id.lstBeneficios);
-        listView.setAdapter(adapter);
-
-        final Context self = this;
-
-        // ListView Item Click Listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-                Beneficio itemValue = (Beneficio)listView.getItemAtPosition(position);
-
-                Intent intent = new Intent(self, DetalleActivity.class);
-                intent.putExtra("beneficio", itemValue.getId());
-
-                startActivityForResult(intent, 1);
-            }
-
-        });
+        cargarLista();
     }
 
 
@@ -197,7 +182,8 @@ public class MasterActivity extends ActionBarActivity
                 url = "https://plus.google.com/+clublanacion";
                 break;
             case 4:
-                // Iniciar ConfiguracionActivity
+                Intent intent = new Intent(this, ConfigActivity.class);
+                startActivityForResult(intent, 1);
                 break;
         }
         if (url != null) {
@@ -282,40 +268,57 @@ public class MasterActivity extends ActionBarActivity
     @Override
     public void update(Observable observable, Object data) {
         try {
-            Location location = (Location) data;
-            ArrayList<Beneficio> beneficios = BeneficiosWebService.obtenerGeolocalizados(location, 200);
-            BeneficioItemAdapter adapter = new BeneficioItemAdapter(this, beneficios, location);
-            final ListView listView = (ListView) findViewById(R.id.lstBeneficios);
-            listView.setAdapter(adapter);
+            location = (Location) data;
 
-            final Context self = this;
-
-            // ListView Item Click Listener
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-
-                    // ListView Clicked item index
-                    int itemPosition = position;
-
-                    // ListView Clicked item value
-                    Beneficio itemValue = (Beneficio)listView.getItemAtPosition(position);
-
-                    Intent intent = new Intent(self, DetalleActivity.class);
-                    intent.putExtra("beneficio", itemValue.getId());
-
-                    startActivityForResult(intent, 1);
-                }
-
-            });
-
-            progress.dismiss();
+            cargarLista();
 
         } catch (Exception e) {
             Log.w("MyApp", e.getMessage());
         }
+    }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data){
+        if (requestCode == 1)
+            try {
+                cargarLista();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+    }
+
+    private void cargarLista() throws JSONException {
+        SharedPreferences settings = getSharedPreferences("UserInfo", 0);
+        ArrayList<Beneficio> beneficios = BeneficiosWebService.obtenerGeolocalizados(this, location, settings.getInt("distancia", 200));
+        BeneficioItemAdapter adapter = new BeneficioItemAdapter(this, beneficios, location);
+        final ListView listView = (ListView) findViewById(R.id.lstBeneficios);
+        listView.setAdapter(adapter);
+
+        final Context self = this;
+
+        // ListView Item Click Listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition = position;
+
+                // ListView Clicked item value
+                Beneficio itemValue = (Beneficio)listView.getItemAtPosition(position);
+
+                Intent intent = new Intent(self, DetalleActivity.class);
+                intent.putExtra("beneficio", itemValue.getId());
+
+                startActivityForResult(intent, 1);
+            }
+
+        });
+
+        if (progress != null && progress.isShowing())
+            progress.dismiss();
     }
 
 }

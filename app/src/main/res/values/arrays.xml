@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tarjetas">
+        <item>Todos</item>
+        <item>Clásicos</item>
+        <item>Premium</item>
+    </string-array>
+</resources>
