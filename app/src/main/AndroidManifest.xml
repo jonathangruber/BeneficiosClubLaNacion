@@ -29,15 +29,17 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".BootBroadcastReceiver"
+        <receiver
+            android:name=".BootBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="BootReceiver">
+            android:label="BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".MainService">
+
+        <service android:name=".MainService" >
             <intent-filter>
                 <action android:name="com.lanacion.clublanacion.beneficios.beneficiosclublanacin.MainService" />
             </intent-filter>
@@ -54,6 +56,11 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDN_a2nTFTK81o_NmBMQ-hhW0Mkg5gpHuw" />
+
+        <activity
+            android:name=".ConfigActivity"
+            android:label="@string/title_activity_config" >
+        </activity>
     </application>
 
 </manifest>
