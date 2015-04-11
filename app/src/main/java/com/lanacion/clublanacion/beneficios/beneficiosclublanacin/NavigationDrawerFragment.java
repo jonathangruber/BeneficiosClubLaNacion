@@ -78,7 +78,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+        selectItem(mCurrentSelectedPosition, true);
     }
 
     @Override
@@ -190,8 +190,12 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
+        selectItem(position, false);
+    }
+
+    private void selectItem(int position, boolean firstRun) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
+        if (mDrawerListView != null && !firstRun) {
             mDrawerListView.setItemChecked(position, true);
         }
         if (mDrawerLayout != null) {
