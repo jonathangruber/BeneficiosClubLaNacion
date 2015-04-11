@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Beneficios Club La Nación</string>
+
+    <string name="action_settings">Configuración</string>
+    <string name="title_activity_master">Beneficios Club La Nación</string>
+
+    <string name="title_section1">Facebook</string>
+    <string name="title_section2">Twitter</string>
+    <string name="title_section3">Google+</string>
+    <string name="title_section4">Ajustes</string>
+
+    <string name="navigation_drawer_open">Abrir cajón de navegación</string>
+    <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
+    <string name="title_activity_detalle">Beneficio</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
