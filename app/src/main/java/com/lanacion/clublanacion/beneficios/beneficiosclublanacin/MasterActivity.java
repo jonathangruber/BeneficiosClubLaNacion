@@ -294,6 +294,10 @@ public class MasterActivity extends ActionBarActivity
         final ListView listView = (ListView) findViewById(R.id.lstBeneficios);
         listView.setAdapter(adapter);
 
+        if (beneficios.size() == 0) {
+            Toast.makeText(this, "No se encontraron beneficios.", Toast.LENGTH_LONG).show();
+        }
+
         final Context self = this;
 
         // ListView Item Click Listener

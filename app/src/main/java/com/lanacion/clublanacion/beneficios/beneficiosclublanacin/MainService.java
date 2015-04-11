@@ -10,12 +10,16 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,6 +29,8 @@ import java.util.Observer;
  */
 public class MainService extends Service implements Observer {
     private boolean isInForegroundMode;
+
+    private ArrayList<String> idsNotificados = new ArrayList<String>();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
@@ -44,8 +50,27 @@ public class MainService extends Service implements Observer {
 
     @Override
     public void update(Observable observable, Object data) {
-        if (debeNotificar())
-            notificar();
+        if (debeNotificar()) {
+            SharedPreferences settings = getSharedPreferences("UserInfo", 0);
+            try {
+                ArrayList<Beneficio> beneficios = BeneficiosWebService.obtenerGeolocalizados(this, (Location)data, settings.getInt("distancia", 200));
+
+                ArrayList<String> idsNotificadosAnt = new ArrayList<String>(idsNotificados);
+                idsNotificados = new ArrayList<String>();
+                boolean notificar = false;
+                for (int i = 0; i < beneficios.size(); i++) {
+                    Beneficio b = beneficios.get(i);
+                    idsNotificados.add(b.getId());
+                    if (!idsNotificadosAnt.contains(b.getId()))
+                        notificar = true;
+                }
+
+                if (notificar)
+                    notificar();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean debeNotificar() {
