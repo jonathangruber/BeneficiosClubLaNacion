@@ -207,6 +207,8 @@ public class MasterActivity extends ActionBarActivity
     @Override
     public void update(Observable observable, Object data) {
         try {
+            Log.i("MyApp", "update");
+
             location = (Location) data;
 
             cargarLista();

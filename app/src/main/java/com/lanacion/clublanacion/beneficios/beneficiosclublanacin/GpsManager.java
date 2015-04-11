@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,6 +23,8 @@ class GpsManager {
 
     private static Location ubicacion;
 
+    private static Date ultimoUpdate;
+
     public GpsManager(Context contexto, Observer o) {
         if (!started)
             Start(contexto);
@@ -34,8 +37,9 @@ class GpsManager {
 
     private static void setUbicacion(Location l) {
         ubicacion = l;
-        for (int i = 0; i < observers.size(); i++)
-            observers.get(i).update(null, l);
+        if (ultimoUpdate == null || System.currentTimeMillis() - ultimoUpdate.getTime() > 1000 * 60)
+            for (int i = 0; i < observers.size(); i++)
+                observers.get(i).update(null, l);
     }
 
     private static void Start(Context contexto) {

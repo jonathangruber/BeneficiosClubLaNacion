@@ -119,4 +119,8 @@ public class Beneficio {
     public void setPoint(Location point) {
         this.point = point;
     }
+
+    public String getUrl() {
+        return "http://club.lanacion.com.ar/beneficio?id=".concat(String.valueOf(this.establecimiento.getId()));
+    }
 }
